@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FirstTry.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using FirstTry.Models;
 
 namespace FirstTry.Controllers
 {
@@ -32,7 +30,7 @@ namespace FirstTry.Controllers
                 return NotFound();
             }
 
-            var toDo = await _context.ToDos
+            ToDo toDo = await _context.ToDos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (toDo == null)
             {
@@ -59,7 +57,7 @@ namespace FirstTry.Controllers
                 toDo.CreatedAt = DateTime.UtcNow;
                 _context.Add(toDo);
                 await _context.SaveChangesAsync();
-
+                TempData["Success"] = "Task Created successfully";
                 return RedirectToAction(nameof(Create));
             }
             return View(toDo);
@@ -73,7 +71,7 @@ namespace FirstTry.Controllers
                 return NotFound();
             }
 
-            var toDo = await _context.ToDos.FindAsync(id);
+            ToDo toDo = await _context.ToDos.FindAsync(id);
             if (toDo == null)
             {
                 return NotFound();
@@ -122,7 +120,7 @@ namespace FirstTry.Controllers
                 return NotFound();
             }
 
-            var toDo = await _context.ToDos
+            ToDo toDo = await _context.ToDos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (toDo == null)
             {
@@ -137,7 +135,7 @@ namespace FirstTry.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var toDo = await _context.ToDos.FindAsync(id);
+            ToDo toDo = await _context.ToDos.FindAsync(id);
             _context.ToDos.Remove(toDo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -145,7 +143,7 @@ namespace FirstTry.Controllers
 
         private bool ToDoExists(int id)
         {
-            return _context.ToDos.Any(e => e.Id == id && e.DeletedAt==null);
+            return _context.ToDos.Any(e => e.Id == id && e.DeletedAt == null);
         }
     }
 }

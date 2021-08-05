@@ -1,15 +1,15 @@
 ﻿@model FirstTry.Models.ToDo
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Task";
 }
 
 <hr />
 <div class="row">
     <div class="col-md-4">
         <div class="card">
-            <div class="card-header">
-                Add
+            <div class="card-header bg-primary text-white">
+                <h5>Task List</h5>
             </div>
             <div class="card-body">
                 <form asp-action="Create">
@@ -30,16 +30,14 @@
                 </form>
             </div>
         </div>
-
-
     </div>
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">
-                List
+            <div class="card-header bg-primary text-white">
+                <h5>List</h5>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table dataTable table-striped table-bordered display">
                     <thead>
                         <tr>
                             <th>
@@ -78,8 +76,6 @@
                                 </tr>
                             }
                         }
-
-
                     </tbody>
                 </table>
             </div>
