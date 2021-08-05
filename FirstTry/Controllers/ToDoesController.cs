@@ -45,7 +45,7 @@ namespace FirstTry.Controllers
         // GET: ToDoes/Create
         public IActionResult Create()
         {
-            ViewData["todoes"] = _context.ToDos.ToListAsync();
+            ViewData["todoes"] = _context.ToDos.ToList();
             return View();
         }
 
@@ -60,7 +60,7 @@ namespace FirstTry.Controllers
                 _context.Add(toDo);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create));
             }
             return View(toDo);
         }
