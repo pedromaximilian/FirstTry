@@ -51,7 +51,7 @@ namespace FirstTry
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=ToDoes}/{action=Index}/{id?}");
             });
         }
     }

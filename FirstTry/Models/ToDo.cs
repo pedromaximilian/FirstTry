@@ -9,8 +9,9 @@ namespace FirstTry.Models
     public class ToDo : BaseEntity
     {
         [Required(ErrorMessage = "{0} is required")]
+        [DataType(DataType.MultilineText)]
         [MaxLength(100)]
-        public int Description { get; set; }
+        public string Description { get; set; }
         [Required(ErrorMessage = "{0} is required")]
         [MaxLength(100)]
         public DateTime Date { get; set; }
