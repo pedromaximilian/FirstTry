@@ -1,7 +1,7 @@
 ﻿@model FirstTry.Models.ToDo
 
 @{
-    ViewData["Title"] = "Create Task";
+    ViewData["Title"] = "Tasks";
 }
 
 <hr />
@@ -9,7 +9,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5>Task List</h5>
+                <h5>Add Task</h5>
             </div>
             <div class="card-body">
                 <form asp-action="Create">
@@ -34,7 +34,7 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5>List</h5>
+                <h5>Task List</h5>
             </div>
             <div class="card-body">
                 <table class="table dataTable table-striped table-bordered display">
@@ -69,9 +69,11 @@
                                     </td>
 
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        <div class="btn-group" role="group" aria-label="editionGroup">
+                                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                            <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete</button>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -82,7 +84,14 @@
         </div>
     </div>
 </div>
-
+<partial name="_DeleteDialog" />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="/js/deleteDialog.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            _deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Todoes/Delete/', false);
+        });
+    </script>
 }

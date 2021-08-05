@@ -113,32 +113,20 @@ namespace FirstTry.Controllers
         }
 
         // GET: ToDoes/Delete/5
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                TempData["Error"] = "Task Delete Failed";
+                return RedirectToAction(nameof(Create));
             }
 
-            ToDo toDo = await _context.ToDos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (toDo == null)
-            {
-                return NotFound();
-            }
-
-            return View(toDo);
-        }
-
-        // POST: ToDoes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             ToDo toDo = await _context.ToDos.FindAsync(id);
             _context.ToDos.Remove(toDo);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Task Deleted successfully";
+            return RedirectToAction(nameof(Create));
         }
 
         private bool ToDoExists(int id)
