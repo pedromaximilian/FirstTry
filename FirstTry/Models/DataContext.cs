@@ -13,5 +13,6 @@ namespace FirstTry.Models
         {
         }
         public DbSet<ToDo> ToDos { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
