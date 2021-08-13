@@ -16,17 +16,12 @@ namespace FirstTry.Models
         [StringLength(50, MinimumLength = 5, ErrorMessage = "Maximum 50 characters")]
         public string FullNane { get; set; }
 
-
-        [DataType(DataType.EmailAddress)]
         [EmailAddress]
         public string Email { get; set; }
 
-
         [MaxLength(50)]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Maximum 50 characters")]
         [Required]
         public string Street { get; set; }
-
 
         public int Number { get; set; }
 
