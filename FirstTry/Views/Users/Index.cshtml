@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FirstTry.Models.User>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+@Html.AntiForgeryToken()
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New</a>
+</p>
+<div id="userList">
+    <partial name="_userListPartial">
+</div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        function Delete(id) {
+
+            var ans = confirm("Are you sure you want to delete this Record?");
+            if (ans) {
+                var token = $(':input:hidden[name*="RequestVerificationToken"]').val();
+                $.ajax({
+                    url: "/Users/Delete", // Url
+                    data: {
+                        __RequestVerificationToken: token,
+                        id: id
+                    }, //Datos
+                    type: "delete"  // Verbo HTTP
+                })
+                    // Se ejecuta si todo fue bien.
+                    .done(function (result) {
+                        if (result != null) {
+                            console.log(result)
+                            // Actualiza el resultado HTML
+                            $("#userList").html(result)
+                        }
+                    })
+                    // Se ejecuta si se produjo un error.
+                    .fail(function (xhr, status, error) {
+                        console.log(error)
+                    })
+            }
+
+            
+        }
+    </script>
+
+}
