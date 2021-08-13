@@ -4,14 +4,16 @@ using FirstTry.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FirstTry.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210813061227_StateCountry")]
+    partial class StateCountry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +27,6 @@ namespace FirstTry.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("MyProperty")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -44,15 +43,10 @@ namespace FirstTry.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.ToTable("States");
                 });
@@ -124,13 +118,6 @@ namespace FirstTry.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FirstTry.Models.State", b =>
-                {
-                    b.HasOne("FirstTry.Models.Country", null)
-                        .WithMany("States")
-                        .HasForeignKey("CountryId");
-                });
-
             modelBuilder.Entity("FirstTry.Models.User", b =>
                 {
                     b.HasOne("FirstTry.Models.Country", "Country")
@@ -144,11 +131,6 @@ namespace FirstTry.Migrations
                     b.Navigation("Country");
 
                     b.Navigation("State");
-                });
-
-            modelBuilder.Entity("FirstTry.Models.Country", b =>
-                {
-                    b.Navigation("States");
                 });
 #pragma warning restore 612, 618
         }

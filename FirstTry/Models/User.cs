@@ -24,6 +24,9 @@ namespace FirstTry.Models
         public string Street { get; set; }
 
         public int Number { get; set; }
+        public Country Country { get; set; }
+        public State State { get; set; }
+
 
     }
 }
