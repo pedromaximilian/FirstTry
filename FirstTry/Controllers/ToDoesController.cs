@@ -19,7 +19,8 @@ namespace FirstTry.Controllers
         // GET: ToDoes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ToDos.ToListAsync());
+            ViewData["todoes"] = _context.ToDos.ToList();
+            return View();
         }
 
         // GET: ToDoes/Details/5
@@ -58,7 +59,7 @@ namespace FirstTry.Controllers
                 _context.Add(toDo);
                 await _context.SaveChangesAsync();
                 TempData["Success"] = "Task Created successfully";
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Index));
             }
             return View(toDo);
         }
@@ -114,19 +115,18 @@ namespace FirstTry.Controllers
 
         // GET: ToDoes/Delete/5
         //[ValidateAntiForgeryToken]
+        [HttpDelete]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                TempData["Error"] = "Task Delete Failed";
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Index));
             }
 
             ToDo toDo = await _context.ToDos.FindAsync(id);
             _context.ToDos.Remove(toDo);
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Task Deleted successfully";
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ToDoExists(int id)
