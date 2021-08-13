@@ -3,8 +3,6 @@
 @{
     ViewData["Title"] = "Tasks";
 }
-
-<hr />
 <div class="row">
     <div class="col-md-4">
         <div class="card">
@@ -12,7 +10,7 @@
                 <h5>Add Task</h5>
             </div>
             <div class="card-body">
-                <form asp-action="Create">
+                <form id="CreateForm" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="Description" class="control-label"></label>
@@ -25,7 +23,10 @@
                         <span asp-validation-for="Date" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
+
+                        <button id="SubmitBtn" type="submit" class="btn btn-primary">
+                            Submit
+                        </button>
                     </div>
                 </form>
             </div>
@@ -36,62 +37,114 @@
             <div class="card-header bg-primary text-white">
                 <h5>Task List</h5>
             </div>
-            <div class="card-body">
-                <table class="table dataTable table-striped table-bordered display">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Description)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Date)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Done)
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (ViewData["todoes"] != null)
-                        {
-                            @foreach (var item in (List<ToDo>)ViewData["todoes"])
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Done)
-                                    </td>
+            <div id="TaskList" class="card-body">
+                <partial name="Index">
+</div>
+        </div>
+    </div>
+</div>
 
-                                    <td>
-                                        <div class="btn-group" role="group" aria-label="editionGroup">
-                                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                            <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                            <button data-id="@item.Id" class="btn btn-danger deleteItem" data-toggle="modal" data-target="#deleteDialog">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
+<div class="modal fade" tabindex="-1" id="detailModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
-<partial name="_DeleteDialog" />
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="/js/deleteDialog.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            _deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Todoes/Delete/', false);
+<script type="text/javascript">
+
+        $(function () {
+            $("#CreateForm").submit(function (e) {
+                e.preventDefault();
+
+                if ($("#CreateForm").valid()) {
+                    // Deshabilitamos el botón de Submit
+                    $("#SubmitBtn").prop("disabled", true);
+
+                    $.ajax({
+                        url: "/ToDoes/Create", // Url
+                        data: $('#CreateForm').serialize(), //Datos
+                        type: "post"  // Verbo HTTP
+                    })
+                        // Se ejecuta si todo fue bien.
+                        .done(function (result) {
+                            if (result != null) {
+                                console.log(result)
+                                // Actualiza el resultado HTML
+                                $("#TaskList").html(result)
+                                // Habilitamos el botón de Submit
+                                $("#SubmitBtn").prop("disabled", false);
+                                // Limpia el formulario
+                                $('#CreateForm').trigger("reset");
+                            }
+                        })
+                        // Se ejecuta si se produjo un error.
+                        .fail(function (xhr, status, error) {
+                            console.log(error)
+                            // Habilitamos el botón de Submit
+                            $("#SubmitBtn").prop("disabled", false);
+                        })
+                        // Hacer algo siempre, haya sido exitosa o no.
+                        .always(function () {
+
+                        });
+                }
+            });
         });
-    </script>
+
+    function Delete(id) {
+        $.ajax({
+            url: "/ToDoes/Delete", // Url
+            data: {
+                id: id
+            }, //Datos
+            type: "delete"  // Verbo HTTP
+        })
+            // Se ejecuta si todo fue bien.
+            .done(function (result) {
+                if (result != null) {
+                    //console.log(result)
+                    // Actualiza el resultado HTML
+                    $("#TaskList").html(result)
+                }
+            })
+            // Se ejecuta si se produjo un error.
+            .fail(function (xhr, status, error) {
+                console.log(error)
+            })
+    }
+
+    function ShowDetails(id) {
+        
+        $.ajax({
+            url: "ToDoes/Details/"+id,
+            type: "get",
+            error: function (res) {
+                console.log("Fallo: ");
+                console.log(res);
+            },
+            success: function (res) {
+                console.log(res)
+                $("#modalContent").html(res);
+                $('#detailModal').modal('toggle')
+            }
+        });
+    };
+</script>
+
 }
